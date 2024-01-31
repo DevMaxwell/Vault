@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="myVaultApp" type="Application" factoryName="Application">
+    <envs>
+      <env name="DB_USER" value="root" />
+      <env name="DB_PASS" value="dbpass123" />
+      <env name="DB_URL" value="jdbd:mysql://localhost:3306/the_vault" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.max.vault.TheVaultApplication" />
+    <module name="vault" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
