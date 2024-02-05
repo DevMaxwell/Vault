@@ -1,16 +1,30 @@
 package com.max.vault.controller;
 
+import com.max.vault.dto.request.UserRequest;
+import com.max.vault.dto.response.BankResponse;
+import com.max.vault.service.UserService;
+import com.max.vault.utils.AppUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class VaultController {
+
+  private final UserService userService;
 
   @GetMapping("/hello")
   public String testServerConfig(){
     log.info("tomcat config");
+    AppUtils.generateAccNum();
     return "hello and welcome";
+  }
+
+  @PostMapping("/createUser")
+  public BankResponse createUserAccount(@RequestBody UserRequest userRequest){
+    return userService.createUser(userRequest);
   }
 }
