@@ -1,5 +1,6 @@
 package com.max.vault.service.impl;
 
+import com.max.vault.dto.request.EmailDetails;
 import com.max.vault.dto.request.UserRequest;
 import com.max.vault.dto.response.AccountInfo;
 import com.max.vault.dto.response.BankResponse;
@@ -7,12 +8,11 @@ import com.max.vault.enums.BankResponseCodes;
 import com.max.vault.enums.Status;
 import com.max.vault.model.User;
 import com.max.vault.repository.UserRepository;
+import com.max.vault.service.EmailService;
 import com.max.vault.service.UserService;
 import com.max.vault.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -24,6 +24,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+
+  private final EmailService emailService;
 
   /**
    * Impl to create a user account
@@ -61,6 +63,18 @@ public class UserServiceImpl implements UserService {
         .status(String.valueOf(Status.ACTIVE)).build();
 
     User savedUsed = userRepository.saveAndFlush(user);
+
+    // send email
+    EmailDetails emailDetails = EmailDetails.builder()
+        .messageBody("Thank you for choosing vault. " +
+            "Your account has been successfully created." +
+            "Your account number is: " + savedUsed.getAccountNumber() +
+            "Your account name is: " + savedUsed.getLastName() + " " +
+            savedUsed.getFirstName())
+        .recipient(savedUsed.getEmail())
+        .subject("ACCOUNT CREATION")
+        .build();
+    emailService.sendEmailAlert(emailDetails);
 
     AccountInfo accountInfo = AccountInfo.builder()
         .accountNumber(savedUsed.getAccountNumber())
