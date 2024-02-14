@@ -1,5 +1,6 @@
 package com.max.vault.controller;
 
+import com.max.vault.dto.request.EnquiryRequest;
 import com.max.vault.dto.request.UserRequest;
 import com.max.vault.dto.response.BankResponse;
 import com.max.vault.service.UserService;
@@ -27,4 +28,11 @@ public class VaultController {
   public BankResponse createUserAccount(@RequestBody UserRequest userRequest){
     return userService.createUser(userRequest);
   }
+
+  @GetMapping("/balanceEnquiry")
+  public BankResponse balanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
+    return userService.balancenquiry(enquiryRequest);
+  }
+
+
 }
