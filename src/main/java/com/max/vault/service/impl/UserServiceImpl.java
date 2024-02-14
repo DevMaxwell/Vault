@@ -1,6 +1,7 @@
 package com.max.vault.service.impl;
 
 import com.max.vault.dto.request.EmailDetails;
+import com.max.vault.dto.request.EnquiryRequest;
 import com.max.vault.dto.request.UserRequest;
 import com.max.vault.dto.response.AccountInfo;
 import com.max.vault.dto.response.BankResponse;
@@ -14,6 +15,7 @@ import com.max.vault.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -85,5 +87,19 @@ public class UserServiceImpl implements UserService {
         .responseCode(BankResponseCodes.USER_CREATION_SUCCESS.getCode())
         .responseMessage(BankResponseCodes.USER_CREATION_SUCCESS.getMessage())
         .accountInfo(accountInfo).build();
+  }
+
+  @Override
+  public BankResponse balancenquiry(EnquiryRequest enquiryRequest) {
+
+    User userExist = userRepository.findByEmail(enquiryRequest.getEmail())
+        .orElseThrow(() -> new IllegalArgumentException("User not found for email: " + enquiryRequest.getEmail()));
+
+    return null;
+  }
+
+  @Override
+  public BankResponse nameEnquiry(EnquiryRequest enquiryRequest) {
+    return null;
   }
 }
