@@ -1,5 +1,6 @@
 package com.max.vault.exceptions;
 
+import com.max.vault.enums.BankResponseCodes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,4 +29,14 @@ public class GlobalExceptionHandler extends RuntimeException {
         );
     return errorMap;
   }
+
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  @ExceptionHandler(UserNotFound.class)
+  public  Map<String, String> handleUserNotFoundException(MethodArgumentNotValidException ex){
+    Map<String, String> errorMap = new HashMap<>();
+    errorMap.put("code", BankResponseCodes.ACCOUNT_NOT_EXIST.getMessage());
+    errorMap.put("message", ex.getMessage());
+    return errorMap;
+  }
+
 }
