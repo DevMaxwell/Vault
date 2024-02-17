@@ -31,8 +31,8 @@ public class GlobalExceptionHandler extends RuntimeException {
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(UserNotFound.class)
-  public  Map<String, String> handleUserNotFoundException(MethodArgumentNotValidException ex){
+  @ExceptionHandler(AccountNotFound.class)
+  public  Map<String, String> handleAccountNotFoundException(MethodArgumentNotValidException ex){
     Map<String, String> errorMap = new HashMap<>();
     errorMap.put("code", BankResponseCodes.ACCOUNT_NOT_EXIST.getMessage());
     errorMap.put("message", ex.getMessage());

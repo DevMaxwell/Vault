@@ -1,11 +1,11 @@
 package com.max.vault.exceptions;
 
-public class UserNotFound extends RuntimeException{
-  public UserNotFound(String message) {
+public class AccountNotFound extends RuntimeException{
+  public AccountNotFound(String message) {
     super(message);
   }
 
-  public UserNotFound(String message, Throwable cause) {
+  public AccountNotFound(String message, Throwable cause) {
     super(message, cause);
   }
 }
