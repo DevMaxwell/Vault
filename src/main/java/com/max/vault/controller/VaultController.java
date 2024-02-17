@@ -5,6 +5,7 @@ import com.max.vault.dto.request.UserRequest;
 import com.max.vault.dto.response.BankResponse;
 import com.max.vault.service.UserService;
 import com.max.vault.utils.AppUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +26,20 @@ public class VaultController {
   }
 
   @PostMapping("/createUser")
-  public BankResponse createUserAccount(@RequestBody UserRequest userRequest){
+  public BankResponse createUserAccount(@RequestBody @Valid UserRequest userRequest){
     return userService.createUser(userRequest);
   }
 
   @GetMapping("/balanceEnquiry")
-  public BankResponse balanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
+  public BankResponse balanceEnquiry(@RequestBody @Valid EnquiryRequest enquiryRequest){
     return userService.balancenquiry(enquiryRequest);
   }
+
+  @GetMapping("/nameEnquiry")
+  public String nameEnquiry(@RequestBody EnquiryRequest enquiryRequest){
+    return userService.nameEnquiry(enquiryRequest);
+  }
+
 
 
 }
