@@ -1,5 +1,6 @@
 package com.max.vault.service.impl;
 
+import com.max.vault.dto.request.CrDrRequest;
 import com.max.vault.dto.request.EmailDetails;
 import com.max.vault.dto.request.EnquiryRequest;
 import com.max.vault.dto.request.UserRequest;
@@ -7,6 +8,7 @@ import com.max.vault.dto.response.AccountInfo;
 import com.max.vault.dto.response.BankResponse;
 import com.max.vault.enums.BankResponseCodes;
 import com.max.vault.enums.Status;
+import com.max.vault.exceptions.AccountNotFound;
 import com.max.vault.model.User;
 import com.max.vault.repository.UserRepository;
 import com.max.vault.service.EmailService;
@@ -92,14 +94,70 @@ public class UserServiceImpl implements UserService {
   @Override
   public BankResponse balancenquiry(EnquiryRequest enquiryRequest) {
 
-    User userExist = userRepository.findByEmail(enquiryRequest.getEmail())
-        .orElseThrow(() -> new IllegalArgumentException("User not found for email: " + enquiryRequest.getEmail()));
-
-    return null;
+    User userExist = userRepository.findByAccountNumber(enquiryRequest.getEmail()).orElseThrow(
+        () -> new AccountNotFound("Account Number not found")
+    );
+    return BankResponse.builder()
+        .accountInfo(
+            AccountInfo.builder()
+                .accountBalance(String.valueOf(userExist.getAccountBalance()))
+                .accountNumber(userExist.getAccountNumber())
+                .accountName(userExist.getFirstName() + " " + userExist.getLastName())
+                .build()
+        )
+        .responseMessage(BankResponseCodes.USER_EXIST.getMessage())
+        .responseCode(BankResponseCodes.USER_EXIST.getCode())
+        .build();
   }
 
   @Override
-  public BankResponse nameEnquiry(EnquiryRequest enquiryRequest) {
+  public String nameEnquiry(EnquiryRequest enquiryRequest) {
+    User userExist = userRepository.findByEmail(enquiryRequest.getEmail()).orElseThrow(
+        () -> new AccountNotFound("Account Number not found")
+    );
+    return userExist.getLastName() + " "
+        + userExist.getFirstName() + " "
+        + userExist.getOtherName();
+  }
+
+  @Override
+  public BankResponse fundstransfer(CrDrRequest crDrRequest) {
+    User creditUser = userRepository.findByAccountNumber(crDrRequest.getCreditAccount()).orElseThrow(
+        () -> new AccountNotFound("Credit Account not found")
+    );
+
+    User debitUser = userRepository.findByAccountNumber(crDrRequest.getDebitAccount()).orElseThrow(
+        () -> new AccountNotFound("Debit Account not found")
+    );
+
+    if (debitUser.getAccountBalance().compareTo(crDrRequest.getAmount()) == (-1)){
+      BankResponse.builder()
+          .accountInfo(
+              AccountInfo.builder()
+                  .accountBalance(String.valueOf(debitUser.getAccountBalance()))
+                  .accountNumber(debitUser.getAccountNumber())
+                  .accountName(debitUser.getFirstName() + " " + debitUser.getLastName())
+                  .build()
+          )
+          .responseMessage(BankResponseCodes.INSUF_FUNDS.getMessage())
+          .responseCode(BankResponseCodes.INSUF_FUNDS.getCode())
+          .build();
+    }
+
+    creditUser.setAccountBalance(creditUser.getAccountBalance().add(crDrRequest.getAmount()));
+    debitUser.setAccountBalance(debitUser.getAccountBalance().subtract(crDrRequest.getAmount()));
+
+    userRepository.saveAndFlush(creditUser);
+    userRepository.saveAndFlush(debitUser);
+
+    return BankResponse.builder()
+        .responseMessage(BankResponseCodes.USER_EXIST.getMessage())
+        .responseCode(BankResponseCodes.USER_EXIST.getCode())
+        .build();
+  }
+
+  @Override
+  public BankResponse debitAccount(CrDrRequest crDrRequest) {
     return null;
   }
 }
