@@ -16,6 +16,8 @@ import com.max.vault.service.UserService;
 import com.max.vault.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +26,7 @@ import java.util.UUID;
  * UserServiceImpl
  */
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -149,6 +152,24 @@ public class UserServiceImpl implements UserService {
 
     userRepository.saveAndFlush(creditUser);
     userRepository.saveAndFlush(debitUser);
+
+    EmailDetails debitAlert = EmailDetails.builder()
+        .subject("DEBIT ALERT")
+        .recipient(debitUser.getEmail())
+        .messageBody("A Debit of "+ crDrRequest.getAmount() +
+        " occurred in you account. " +
+            "Available Balance " + debitUser.getAccountBalance())
+        .build();
+    emailService.sendEmailAlert(debitAlert);
+
+    EmailDetails creditAlert = EmailDetails.builder()
+        .subject("CREDIT ALERT")
+        .recipient(debitUser.getEmail())
+        .messageBody("A Credit of "+ crDrRequest.getAmount() +
+            " occurred in you account. " +
+            "Available Balance " + debitUser.getAccountBalance())
+        .build();
+    emailService.sendEmailAlert(creditAlert);
 
     return BankResponse.builder()
         .responseMessage(BankResponseCodes.USER_EXIST.getMessage())
