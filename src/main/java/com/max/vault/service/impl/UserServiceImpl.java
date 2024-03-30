@@ -1,9 +1,6 @@
 package com.max.vault.service.impl;
 
-import com.max.vault.dto.request.CrDrRequest;
-import com.max.vault.dto.request.EmailDetails;
-import com.max.vault.dto.request.EnquiryRequest;
-import com.max.vault.dto.request.UserRequest;
+import com.max.vault.dto.request.*;
 import com.max.vault.dto.response.AccountInfo;
 import com.max.vault.dto.response.BankResponse;
 import com.max.vault.enums.BankResponseCodes;
@@ -12,6 +9,7 @@ import com.max.vault.exceptions.AccountNotFound;
 import com.max.vault.model.User;
 import com.max.vault.repository.UserRepository;
 import com.max.vault.service.EmailService;
+import com.max.vault.service.TransactionService;
 import com.max.vault.service.UserService;
 import com.max.vault.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,8 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
 
   private final EmailService emailService;
+
+  private final TransactionService transactionService;
 
   /**
    * Impl to create a user account
@@ -152,6 +152,15 @@ public class UserServiceImpl implements UserService {
 
     userRepository.saveAndFlush(creditUser);
     userRepository.saveAndFlush(debitUser);
+
+    TransactionDto transactionDto = TransactionDto.builder()
+        .amount(String.valueOf(crDrRequest.getAmount()))
+        .destAcct(crDrRequest.getCreditAccount())
+        .sourceAcct(crDrRequest.getDebitAccount())
+        .transactionStatus("Success")
+        .transactionType("Credit").build();
+
+    transactionService.saveTransaction(transactionDto);
 
     EmailDetails debitAlert = EmailDetails.builder()
         .subject("DEBIT ALERT")
