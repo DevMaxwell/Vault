@@ -1,13 +1,14 @@
 package com.max.vault.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "v_transactions")
 public class Transaction {
-
+  @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String transactionId;
   private String transactionType;
@@ -24,4 +25,8 @@ public class Transaction {
   private String amount;
   private String sourceAcct;
   private String destAcct;
+  @CreationTimestamp
+  private LocalDateTime createdAt;
+  @UpdateTimestamp
+  private LocalDateTime modifiedAt;
 }
