@@ -9,5 +9,5 @@ import java.util.List;
 public interface BankStatementService {
   List<Transaction> generateStatement(String acctNum, String startDate, String endDate);
 
-  void designStatement(List<Transaction> transactions) throws FileNotFoundException, DocumentException;
+  void designStatementAndSendEMail(List<Transaction> transactions) throws FileNotFoundException, DocumentException;
 }

@@ -1,5 +1,6 @@
 package com.max.vault.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -10,19 +11,19 @@ import lombok.*;
 @AllArgsConstructor
 public class UserRequest {
 
-  @NotNull(message = "First Name cannot be null")
+  @NotBlank(message = "First Name cannot be null")
   private String firstName;
-  @NotNull(message = "Last name cannot be null")
+  @NotBlank(message = "Last name cannot be null")
   private String lastName;
   private String otherName;
-  @NotNull(message = "Gender cannot be null")
+  @NotBlank(message = "Gender cannot be null")
   private String gender;
-  @NotNull(message = "Address cannot be null")
+  @NotBlank(message = "Address cannot be null")
   private String address;
-  @NotNull(message = "State of origin cannot be null")
+  @NotBlank(message = "State of origin cannot be null")
   private String stateOfOrigin;
   private String email;
-  @NotNull(message = "Phone Number cannot be null")
+  @NotBlank(message = "Phone Number cannot be null")
   private String phoneNumber;
   private String alternativePhoneNumber;
   private String accountClassDescription;

@@ -4,9 +4,11 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.max.vault.dto.request.EmailDetails;
 import com.max.vault.model.Transaction;
 import com.max.vault.repository.TransactionRepository;
 import com.max.vault.service.BankStatementService;
+import com.max.vault.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.List;
 public class BankStatementServiceImpl implements BankStatementService {
 
   private final TransactionRepository transactionRepository;
+
+  private final EmailService emailService;
 
   private static final String FILE = "/Users/maxwell/Documents/vaultPDF";
   @Override
@@ -39,7 +43,7 @@ public class BankStatementServiceImpl implements BankStatementService {
   }
 
   @Override
-  public void designStatement(List<Transaction> transactions)
+  public void designStatementAndSendEMail(List<Transaction> transactions)
       throws FileNotFoundException, DocumentException {
     Rectangle statementSize = new Rectangle(PageSize.A4);
     Document document = new Document(statementSize);
@@ -110,6 +114,14 @@ public class BankStatementServiceImpl implements BankStatementService {
     document.add(statementRecord);
 
     document.close();
+
+    EmailDetails emailDetails = EmailDetails.builder()
+        .subject("ACCOUNT STATEMENt")
+        .recipient("")
+        .messageBody("Please find attached your statement of account")
+        .attachment(FILE).build();
+
+    emailService.sendEmailWithAttachment(emailDetails);
 
   }
 }

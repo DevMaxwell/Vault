@@ -1,15 +1,20 @@
 package com.max.vault.controller;
 
+import com.max.vault.dto.request.BankStatement;
 import com.max.vault.dto.request.CrDrRequest;
 import com.max.vault.dto.request.EnquiryRequest;
 import com.max.vault.dto.request.UserRequest;
 import com.max.vault.dto.response.BankResponse;
+import com.max.vault.model.Transaction;
+import com.max.vault.service.BankStatementService;
 import com.max.vault.service.UserService;
 import com.max.vault.utils.AppUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class VaultController {
 
   private final UserService userService;
+
+  private final BankStatementService bankStatementService;
 
   @GetMapping("/hello")
   public String testServerConfig(){
@@ -44,6 +51,12 @@ public class VaultController {
   @GetMapping("/transferFunds")
   public BankResponse fundsTransfer(@RequestBody @Valid CrDrRequest crDrRequest){
     return userService.fundstransfer(crDrRequest);
+  }
+
+  @GetMapping("/getBankStatement")
+  public List<Transaction> bankStatement(@RequestBody @Valid BankStatement bankStatement){
+    return bankStatementService.generateStatement(bankStatement.getAcctNum(), bankStatement.getStartDate(),
+        bankStatement.getEndDate());
   }
 
 
