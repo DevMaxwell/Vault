@@ -1,9 +1,6 @@
 package com.max.vault.controller;
 
-import com.max.vault.dto.request.BankStatement;
-import com.max.vault.dto.request.CrDrRequest;
-import com.max.vault.dto.request.EnquiryRequest;
-import com.max.vault.dto.request.UserRequest;
+import com.max.vault.dto.request.*;
 import com.max.vault.dto.response.BankResponse;
 import com.max.vault.model.Transaction;
 import com.max.vault.service.BankStatementService;
@@ -39,12 +36,12 @@ public class VaultController {
   }
 
   @GetMapping("/balanceEnquiry")
-  public BankResponse balanceEnquiry(@RequestBody @Valid EnquiryRequest enquiryRequest){
+  public BankResponse balanceEnquiry(@RequestBody @Valid EnquiryRequestByAccNum enquiryRequest){
     return userService.balancenquiry(enquiryRequest);
   }
 
   @GetMapping("/nameEnquiry")
-  public String nameEnquiry(@RequestBody EnquiryRequest enquiryRequest){
+  public String nameEnquiry(@RequestBody EnquiryRequestByEmail enquiryRequest){
     return userService.nameEnquiry(enquiryRequest);
   }
 
