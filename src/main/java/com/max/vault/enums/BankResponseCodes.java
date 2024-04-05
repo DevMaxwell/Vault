@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum BankResponseCodes {
   USER_CREATION_SUCCESS("000", "User created successfully"),
   FUNDS_TRANSFER_SUCCESS("000", "Funds transfer success"),
+  ACCOUNT_FOUND("000", "Balance enquiry successful"),
   USER_EXIST("001", "User already exists"),
   ACCOUNT_NOT_EXIST("002","Account does not exist"),
   ACCOUNT_EXIST("003","Account exist"),
