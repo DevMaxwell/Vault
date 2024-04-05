@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnquiryRequest {
+public class EnquiryRequestByEmail {
   private String email;
-  private String accountNum;
 }
