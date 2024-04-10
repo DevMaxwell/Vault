@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -95,9 +94,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public BankResponse balancenquiry(EnquiryRequest enquiryRequest) {
+  public BankResponse balancenquiry(EnquiryRequestByAccNum enquiryRequest) {
 
-    User userExist = userRepository.findByAccountNumber(enquiryRequest.getEmail()).orElseThrow(
+    log.info("Balance Enquiry Request with account number {}", enquiryRequest.getAccountNum());
+
+    User userExist = userRepository.findByAccountNumber(enquiryRequest.getAccountNum()).orElseThrow(
         () -> new AccountNotFound("Account Number not found")
     );
     return BankResponse.builder()
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public String nameEnquiry(EnquiryRequest enquiryRequest) {
+  public String nameEnquiry(EnquiryRequestByEmail enquiryRequest) {
     User userExist = userRepository.findByEmail(enquiryRequest.getEmail()).orElseThrow(
         () -> new AccountNotFound("Account Number not found")
     );
